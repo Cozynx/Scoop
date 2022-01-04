@@ -37,3 +37,6 @@
 # Archives
 *.tar.*
 *.tar
+
+# VSCODE regarding Configs
+.vscode/
