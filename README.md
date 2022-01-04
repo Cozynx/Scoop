@@ -1,6 +1,4 @@
 <h1 align="center">Scoop</h1>
-<hr />
-<br />
 <br />
 <h2>Building</h2>
 <br />
