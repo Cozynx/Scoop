@@ -39,5 +39,5 @@
 *.tar.*
 *.tar
 
-# VSCODE regarding Configs
+# VSCODE Configuration
 .vscode/
