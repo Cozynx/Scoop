@@ -33,6 +33,7 @@
 *.efi
 *.efi.debug
 *.img
+*.elf
 
 # Archives
 *.tar.*
