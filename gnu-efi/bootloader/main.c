@@ -12,14 +12,14 @@ typedef struct {
 	unsigned int PixelsPerScanline;
 } Framebuffer;
 
+#define PSF1_MAGIC0 0x36
+#define PSF1_MAGIC1 0x04
+
 typedef struct {
 	unsigned char magic[2];
 	unsigned char mode;
 	unsigned char charsize;
 } PSF1_HEADER;
-
-#define PSF1_MAGIC0 0x36
-#define PSF1_MAGIC1 0x04
 
 typedef struct {
 	PSF1_HEADER* psf1_Header;
@@ -182,7 +182,7 @@ EFI_STATUS efi_main (EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable) {
 
 	Print(L"Kernel Loaded\n\r");
 
-	void (*KernelStart)(Framebuffer*) = ((__attribute__((sysv_abi)) void(*)(Framebuffer*)) header.e_entry);
+	void (*KernelStart)(Framebuffer*, PSF1_FONT*) = ((__attribute__((sysv_abi)) void(*)(Framebuffer*, PSF1_FONT*)) header.e_entry);
 
 	PSF1_FONT* newFont = LoadPSF1Font(NULL, L"zap-light16.psf", ImageHandle, SystemTable);
 	if(newFont == NULL) {
@@ -195,7 +195,7 @@ EFI_STATUS efi_main (EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable) {
 
 	Print(L"Base: 0x%x\n\rSize: 0x%x\n\rWidth: %d\n\rHeight: %d\n\rPixelPerScanline: %d\n\r \n\r", newBuffer->BaseAddress, newBuffer->BufferSize, newBuffer->Width, newBuffer->Height, newBuffer->PixelsPerScanline);
 
-	KernelStart(newBuffer);
+	KernelStart(newBuffer, newFont);
 
 	return EFI_SUCCESS; // Exit the UEFI application
 }
