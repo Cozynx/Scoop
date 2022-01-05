@@ -113,6 +113,14 @@ PSF1_FONT* LoadPSF1Font(EFI_FILE* Directory, CHAR16* Path, EFI_HANDLE ImageHandl
 	return finishedFont;
 }
 
+typedef struct {
+	Framebuffer* framebuffer;
+	PSF1_FONT* psf1_Font;
+	EFI_MEMORY_DESCRIPTOR* mMap;
+	UINTN mMapSize;
+	UINTN mMapDescSize;
+} BootInfo;
+
 EFI_STATUS efi_main (EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable) {
 	InitializeLib(ImageHandle, SystemTable);
 	Print(L"Initializing Blah Blah Blah\n\r");
@@ -182,8 +190,6 @@ EFI_STATUS efi_main (EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable) {
 
 	Print(L"Kernel Loaded\n\r");
 
-	void (*KernelStart)(Framebuffer*, PSF1_FONT*) = ((__attribute__((sysv_abi)) void(*)(Framebuffer*, PSF1_FONT*)) header.e_entry);
-
 	PSF1_FONT* newFont = LoadPSF1Font(NULL, L"zap-light16.psf", ImageHandle, SystemTable);
 	if(newFont == NULL) {
 		Print(L"Font is not valid or is not found\n\r");
@@ -195,7 +201,28 @@ EFI_STATUS efi_main (EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable) {
 
 	Print(L"Base: 0x%x\n\rSize: 0x%x\n\rWidth: %d\n\rHeight: %d\n\rPixelPerScanline: %d\n\r \n\r", newBuffer->BaseAddress, newBuffer->BufferSize, newBuffer->Width, newBuffer->Height, newBuffer->PixelsPerScanline);
 
-	KernelStart(newBuffer, newFont);
+	EFI_MEMORY_DESCRIPTOR* Map = NULL;
+	UINTN MapSize, MapKey;
+	UINTN DescriptorSize;
+	UINT32 DescriptorVersion;
+	{
+		SystemTable->BootServices->GetMemoryMap(&MapSize, Map, &MapKey, &DescriptorSize, &DescriptorVersion);
+		SystemTable->BootServices->AllocatePool(EfiLoaderData, MapSize, (void**)&Map);
+		SystemTable->BootServices->GetMemoryMap(&MapSize, Map, &MapKey, &DescriptorSize, &DescriptorVersion);
+	}
+
+	void (*KernelStart)(BootInfo*) = ((__attribute__((sysv_abi)) void(*)(BootInfo*)) header.e_entry);
+
+	BootInfo bootInfo;
+	bootInfo.framebuffer = newBuffer;
+	bootInfo.psf1_Font = newFont;
+	bootInfo.mMap = Map;
+	bootInfo.mMapSize = MapSize;
+	bootInfo.mMapDescSize = DescriptorSize;
+
+	SystemTable->BootServices->ExitBootServices(ImageHandle, MapKey);
+
+	KernelStart(&bootInfo);
 
 	return EFI_SUCCESS; // Exit the UEFI application
 }
