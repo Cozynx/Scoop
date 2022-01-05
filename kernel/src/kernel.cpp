@@ -1,31 +1,37 @@
 #include <cstdint>
-#include "BasicRenderer.h"
-#include "cStr.h"
-#include "efiMemory.h"
+#include "includes/BasicRenderer.h"
+#include "includes/cStr.h"
+#include "includes/efiMemory.h"
+#include "includes/memory.h"
+#include "includes/Bitmap.h"
 
 struct BootInfo{
 	Framebuffer* framebuffer;
 	PSF1_FONT* psf1_Font;
-	void* mMap;
+	EFI_MEMORY_DESCRIPTOR* mMap;
 	uint64_t mMapSize;
 	uint64_t mMapDescSize;
 };
+
+uint8_t testBuffer[20];
 
 extern "C" void _start(BootInfo* bootInfo) {
     BasicRenderer newRenderer = BasicRenderer(bootInfo->framebuffer, bootInfo->psf1_Font);
 
     uint64_t mMapEntries = bootInfo->mMapSize / bootInfo->mMapDescSize;
 
-    for(int i = 0; i < mMapEntries; i++) {
-        EFI_MEMORY_DESCRIPTOR* desc = (EFI_MEMORY_DESCRIPTOR*)((uint64_t)bootInfo->mMap + (i * bootInfo->mMapDescSize));
-        newRenderer.CursorPosition = {0, newRenderer.CursorPosition.Y + 16};
-        newRenderer.Print(EFI_MEMORY_TYPE_STRINGS[desc->type]);
-        newRenderer.Color = 0xffff00ff;
-        newRenderer.Print(" ");
-        newRenderer.Print(to_string(desc->numPages * 4096 / 1024));
-        newRenderer.Print(" KB");
-        newRenderer.Color = 0xffffffff;
-    }
+    // newRenderer.Print(to_string(GetMemorySize(bootInfo->mMap, mMapEntries, bootInfo->mMapDescSize)));
+
+    // for(int i = 0; i < mMapEntries; i++) {
+    //     EFI_MEMORY_DESCRIPTOR* desc = (EFI_MEMORY_DESCRIPTOR*)((uint64_t)bootInfo->mMap + (i * bootInfo->mMapDescSize));
+    //     newRenderer.CursorPosition = {0, newRenderer.CursorPosition.Y + 16};
+    //     newRenderer.Print(EFI_MEMORY_TYPE_STRINGS[desc->type]);
+    //     newRenderer.Color = 0xffff00ff;
+    //     newRenderer.Print(" ");
+    //     newRenderer.Print(to_string(desc->numPages * 4096 / 1024));
+    //     newRenderer.Print(" KB");
+    //     newRenderer.Color = 0xffffffff;
+    // }
 
     return;
 }
