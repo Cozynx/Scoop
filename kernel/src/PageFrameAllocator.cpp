@@ -39,6 +39,6 @@ void PageFrameAllocator::InitBitmap(size_t bitmapSize, void* bufferAddress) {
     PageBitmap.Size = bitmapSize;
     PageBitmap.Buffer = (uint8_t*)bufferAddress;
     for(int i = 0; i < bitmapSize; i++) {
-        *(uint8_t*)(PageBitmap.Buffer + i) = 0
+        *(uint8_t*)(PageBitmap.Buffer + i) = 0;
     }
 }
