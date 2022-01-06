@@ -1,9 +1,11 @@
-#include "../../includes/PageFrameAllocator.h"
+#include "../../include/PageFrameAllocator.h"
 
 uint64_t freeMemory;
 uint64_t reservedMemory;
 uint64_t usedMemory;
 bool Initialized = false;
+
+PageFrameAllocator GlobalAllocator;
 
 void PageFrameAllocator::ReadEfiMemoryMap(EFI_MEMORY_DESCRIPTOR* mMap, size_t mMapSize, size_t mMapDescSize) {
     if(Initialized) return;
