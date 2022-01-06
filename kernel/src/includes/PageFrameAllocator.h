@@ -3,7 +3,7 @@
 #include "efiMemory.h"
 #include <cstdint>
 #include "bitmap.h"
-#include "memory.h"
+#include "Memory.h"
 
 class PageFrameAllocator {
 public:

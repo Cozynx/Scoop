@@ -1,4 +1,4 @@
-#include "includes/BasicRenderer.h"
+#include "../../includes/BasicRenderer.h"
 
 BasicRenderer::BasicRenderer(Framebuffer* targetFramebuffer, PSF1_FONT* psf1_font) {
 	TargetFrameBuffer = targetFramebuffer;
