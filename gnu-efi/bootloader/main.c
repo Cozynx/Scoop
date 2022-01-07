@@ -1,8 +1,7 @@
 #include <efi.h>
 #include <efilib.h>
 #include <elf.h>
-
-typedef unsigned long long size_t;
+#include <stddef.h>
 
 typedef struct {
 	void* BaseAddress;
@@ -38,7 +37,7 @@ Framebuffer* InitializeGOP() {
 		Print(L"Unable to locate GOP\n\r");
 		return NULL;
 	} else {
-		Print(L"GOP located\n\r");
+		// Print(L"GOP located\n\r");
 	}
 
 	framebuffer.BaseAddress = (void*)gop->Mode->FrameBufferBase;
@@ -123,14 +122,14 @@ typedef struct {
 
 EFI_STATUS efi_main (EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable) {
 	InitializeLib(ImageHandle, SystemTable);
-	Print(L"Initializing Blah Blah Blah\n\r");
+	// Print(L"Initializing Blah Blah Blah\n\r");
 
 	EFI_FILE* Kernel = LoadFile(NULL, L"kernel.elf", ImageHandle, SystemTable);
 
 	if(Kernel == NULL) {
 		Print(L"Could not Load Kernel\n\r");
 	} else {
-		Print(L"Kernel Loaded SuccessFully\n\r");
+		// Print(L"Kernel Loaded SuccessFully\n\r");
 	}
 
 	// Elf Header
@@ -156,7 +155,7 @@ EFI_STATUS efi_main (EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable) {
 	) {
 		Print(L"Kernel format is bad\r\n");
 	} else {
-		Print(L"Kernel header successfully verfied\r\n");
+		// Print(L"Kernel header successfully verfied\r\n");
 	}
 
 	// Program Header
@@ -188,18 +187,18 @@ EFI_STATUS efi_main (EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable) {
 		}
 	}
 
-	Print(L"Kernel Loaded\n\r");
+	// Print(L"Kernel Loaded\n\r");
 
 	PSF1_FONT* newFont = LoadPSF1Font(NULL, L"zap-light16.psf", ImageHandle, SystemTable);
 	if(newFont == NULL) {
 		Print(L"Font is not valid or is not found\n\r");
 	} else {
-		Print(L"Font found. Char size: %d\n\r", newFont->psf1_Header->charsize);
+		// Print(L"Font found. Char size: %d\n\r", newFont->psf1_Header->charsize);
 	}
 
 	Framebuffer* newBuffer = InitializeGOP();
 
-	Print(L"Base: 0x%x\n\rSize: 0x%x\n\rWidth: %d\n\rHeight: %d\n\rPixelPerScanline: %d\n\r \n\r", newBuffer->BaseAddress, newBuffer->BufferSize, newBuffer->Width, newBuffer->Height, newBuffer->PixelsPerScanline);
+	// Print(L"Base: 0x%x\n\rSize: 0x%x\n\rWidth: %d\n\rHeight: %d\n\rPixelPerScanline: %d\n\r \n\r", newBuffer->BaseAddress, newBuffer->BufferSize, newBuffer->Width, newBuffer->Height, newBuffer->PixelsPerScanline);
 
 	EFI_MEMORY_DESCRIPTOR* Map = NULL;
 	UINTN MapSize, MapKey;

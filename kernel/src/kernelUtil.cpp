@@ -5,7 +5,6 @@ PageTableManager pageTableManager = NULL;
 void PrepareMemory(BootInfo* bootInfo) {
     uint64_t mMapEntries = bootInfo->mMapSize / bootInfo->mMapDescSize;
     
-    GlobalAllocator = PageFrameAllocator();
     GlobalAllocator.ReadEfiMemoryMap(bootInfo->mMap, bootInfo->mMapSize, bootInfo->mMapDescSize);
 
     // Reserve Kernel Pages
@@ -36,9 +35,14 @@ void PrepareMemory(BootInfo* bootInfo) {
 }
 
 KernelInfo InitializeKernel(BootInfo* bootInfo) {
+    GDTDescriptor gdtDescriptor;
+    gdtDescriptor.size = sizeof(GDT) - 1;
+    gdtDescriptor.Offset = (uint64_t)&DefaultGDT;
+    LoadGDT(&gdtDescriptor);
+
     PrepareMemory(bootInfo);
-    
-    memset(bootInfo->framebuffer->BaseAddress = 0, 0, bootInfo->framebuffer->BufferSize);
+
+    memset(bootInfo->framebuffer->BaseAddress, 0, bootInfo->framebuffer->BufferSize);
     
     return kernelInfo;
 }
