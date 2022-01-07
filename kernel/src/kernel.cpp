@@ -3,10 +3,10 @@
 extern "C" void _start(BootInfo* bootInfo) {
     KernelInfo kernelInfo = InitializeKernel(bootInfo);
     PageTableManager* pageTableManager = kernelInfo.pageTableManager;      
-    BasicRenderer newRenderer = BasicRenderer(bootInfo->framebuffer, bootInfo->psf1_Font);
+    BasicRenderer Renderer = BasicRenderer(bootInfo->framebuffer, bootInfo->psf1_Font);
 
-    newRenderer.CursorPosition = {0, newRenderer.CursorPosition.Y + 16};
-    newRenderer.Print("Kernel Initialized Successfully");
+    Renderer.CursorPosition = {0, Renderer.CursorPosition.Y + 16};
+    Renderer.Print("Kernel Initialized Successfully");
 
     while(true);
 }

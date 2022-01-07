@@ -11,6 +11,7 @@
 #include "include/Paging.h"
 #include "include/PageTableManager.h"
 #include "GDT/gdt.h"
+#include "Interrupts/IDT.h"
 
 struct BootInfo{
 	Framebuffer* framebuffer;

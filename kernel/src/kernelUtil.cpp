@@ -34,15 +34,23 @@ void PrepareMemory(BootInfo* bootInfo) {
     kernelInfo.pageTableManager = &pageTableManager;
 }
 
+IDTR idtr;
+void PrepareInterrupts() {
+    idtr.limit = 0x0FFF;
+    idtr.offset = (uint64_t)GlobalAllocator.RequestPage();
+
+    IDTDescEntry* int_PageFault = (IDTDescEntry*)(idtr.offset + 0xE * sizeof(IDTDescEntry));
+}
+
 KernelInfo InitializeKernel(BootInfo* bootInfo) {
     GDTDescriptor gdtDescriptor;
-    gdtDescriptor.size = sizeof(GDT) - 1;
+    gdtDescriptor.Size = sizeof(GDT) - 1;
     gdtDescriptor.Offset = (uint64_t)&DefaultGDT;
     LoadGDT(&gdtDescriptor);
 
     PrepareMemory(bootInfo);
 
     memset(bootInfo->framebuffer->BaseAddress, 0, bootInfo->framebuffer->BufferSize);
-    
+
     return kernelInfo;
 }
