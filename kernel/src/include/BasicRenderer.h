@@ -13,3 +13,5 @@ public:
     void Print(const char* str);
     void putChar(char chr, unsigned int xOff, unsigned int yOff);
 };
+
+extern BasicRenderer* GlobalRenderer;

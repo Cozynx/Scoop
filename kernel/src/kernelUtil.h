@@ -12,6 +12,7 @@
 #include "include/PageTableManager.h"
 #include "GDT/gdt.h"
 #include "Interrupts/IDT.h"
+#include "Interrupts/Interrupts.h"
 
 struct BootInfo{
 	Framebuffer* framebuffer;

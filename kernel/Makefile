@@ -27,6 +27,11 @@ DIRS = $(wildcard $(SRCDIR)/*)
 
 kernel: $(OBJS) link
 
+$(OBJDIR)/Interrupts/%.o: $(SRCDIR)/Interrupts/%.cpp
+	@ echo !===== COMPILING KERNEL $^
+	@ mkdir -p $(@D)
+	$(CC) -mno-red-zone -mgeneral-regs-only -ffreestanding -c $^ -o $@
+
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 	@ echo !===== COMPILING KERNEL $^
 	@ mkdir -p $(@D)
