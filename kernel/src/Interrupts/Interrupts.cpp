@@ -1,7 +1,8 @@
 #include "Interrupts.h"
+#include "../Panic/Panic.h"
 
 __attribute__((interrupt)) void PageFault_Handler(struct Interrupt_frame* frame) {
-    GlobalRenderer->Print("Page Fault Detected!");
+    Panic("Page Fault Detected");
 
     while(true);
 }
