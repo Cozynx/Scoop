@@ -2,6 +2,7 @@
 #include "math.h"
 #include "FrameBuffer.h"
 #include "SimpleFonts.h"
+#include <stdint.h>
 
 class BasicRenderer{
 public:
@@ -12,6 +13,8 @@ public:
     unsigned int Color;
     void Print(const char* str);
     void putChar(char chr, unsigned int xOff, unsigned int yOff);
+    void Clear(uint32_t color);
+    void Next();
 };
 
 extern BasicRenderer* GlobalRenderer;

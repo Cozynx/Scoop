@@ -34,3 +34,22 @@ void BasicRenderer::putChar(char chr, unsigned int xOff, unsigned int yOff) {
 		fontPtr++;
     }
 }
+
+void BasicRenderer::Clear(uint32_t color) {
+	uint64_t fbBase = (uint64_t)TargetFrameBuffer->BaseAddress;
+	uint64_t bytesPerScanLine = TargetFrameBuffer->PixelsPerScanline * 4;
+	uint64_t fbHeight = TargetFrameBuffer->Height;
+	uint64_t fbSize = TargetFrameBuffer->BufferSize;
+
+	for(int verticalScanLine = 0; verticalScanLine < fbHeight; verticalScanLine++) {
+		uint64_t pixPtrBase = fbBase + (bytesPerScanLine * verticalScanLine);
+		for(uint32_t* pixPtr = (uint32_t*)pixPtrBase; pixPtr < (uint32_t*)(pixPtrBase + bytesPerScanLine); pixPtr++) {
+			*pixPtr = color;
+		}
+	}
+}
+
+void BasicRenderer::Next() {
+	CursorPosition.X = 0;
+	CursorPosition.Y += 16;
+}

@@ -8,9 +8,9 @@ extern "C" void _start(BootInfo* bootInfo) {
     GlobalRenderer->Print("Kernel Initialized Successfully");
 
     // asm("int $0x0e"); // Pretend a software interrupt
-
-    int* test = (int*)0x80000000000;
-    *test = 2;
+    GlobalRenderer->Clear(0x00ff0000);
+    // int* test = (int*)0x80000000000;
+    // *test = 2;
 
     while(true);
 }
