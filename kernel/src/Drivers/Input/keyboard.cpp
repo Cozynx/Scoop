@@ -2,7 +2,6 @@
 
 bool isLeftShiftPressed;
 bool isRightShiftPressed;
-bool isCapslockPressed;
 
 void HandleKeyboard(uint8_t scancode) {
     switch(scancode) {
@@ -27,9 +26,15 @@ void HandleKeyboard(uint8_t scancode) {
     case BackSpace:
         GlobalRenderer->ClearChar();
         return;
+    case CapsLock:
+        isLeftShiftPressed = true;
+        return;
+    case CapsLock + 0x80:
+        isLeftShiftPressed = false;
+        return;
     }
 
-    char ascii = QWERTYKeyboard::Translate(scancode, isLeftShiftPressed | isRightShiftPressed);
+    char ascii = QWERTYKeyboard::Translate(scancode, isLeftShiftPressed || isRightShiftPressed);
 
     if(ascii != 0) GlobalRenderer->putChar(ascii);
 }
