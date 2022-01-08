@@ -11,10 +11,13 @@ public:
     Framebuffer* TargetFrameBuffer;
     PSF1_FONT* PSF1_font;
     unsigned int Color;
+    unsigned int ClearColor;
     void Print(const char* str);
     void putChar(char chr, unsigned int xOff, unsigned int yOff);
-    void Clear(uint32_t color);
+    void putChar(char chr);
+    void Clear();
     void Next();
+    void ClearChar();
 };
 
 extern BasicRenderer* GlobalRenderer;

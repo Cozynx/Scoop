@@ -1,6 +1,7 @@
 #pragma once
 #include "../include/BasicRenderer.h"
 #include "../include/IO.h"
+#include "../include/keyboard.h"
 
 #define PIC1_COMMAND 0x20   // master PIC commandline
 #define PIC1_DATA 0x21      // Data Line for Master PIC
