@@ -10,6 +10,7 @@
 #include "include/PageMapIndexer.h"
 #include "include/Paging.h"
 #include "include/PageTableManager.h"
+#include "include/IO.h"
 #include "GDT/gdt.h"
 #include "Interrupts/IDT.h"
 #include "Interrupts/Interrupts.h"
