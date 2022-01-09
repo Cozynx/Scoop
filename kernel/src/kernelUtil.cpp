@@ -56,9 +56,9 @@ void PrepareInterrupts() {
 
     RemapPIC();
 
-    outb(PIC1_DATA, 0b11111101);
-    outb(PIC2_DATA, 0b11111111);
-
+    outb(PIC1_DATA, 0b11111001);
+    outb(PIC2_DATA, 0b11101111);
+    
     asm ("sti");
 }
 

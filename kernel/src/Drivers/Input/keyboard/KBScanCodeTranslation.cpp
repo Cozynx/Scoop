@@ -1,4 +1,4 @@
-#include "../../include/KBScanCodeTranslation.h"
+#include "../../../include/KBScanCodeTranslation.h"
 
 namespace QWERTYKeyboard {
     const char ASCIITable[] = {
