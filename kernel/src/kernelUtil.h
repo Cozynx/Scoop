@@ -14,6 +14,9 @@
 #include "GDT/gdt.h"
 #include "Interrupts/IDT.h"
 #include "Interrupts/Interrupts.h"
+#include "ACPI/ACPI.h"
+#include "PCI/PCI.h"
+#include "include/mouse.h"
 
 struct BootInfo{
 	Framebuffer* framebuffer;
@@ -21,6 +24,7 @@ struct BootInfo{
 	EFI_MEMORY_DESCRIPTOR* mMap;
 	uint64_t mMapSize;
 	uint64_t mMapDescSize;
+	ACPI::RSDP2* rsdp;
 };
 
 extern uint64_t _KernelStart;

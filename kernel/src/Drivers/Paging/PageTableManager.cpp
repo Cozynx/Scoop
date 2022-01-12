@@ -5,6 +5,8 @@
 #include "../../include/Paging.h"
 #include <cstdint>
 
+PageTableManager g_PageTableManager = NULL;
+
 PageTableManager::PageTableManager(PageTable* PML4Address) {
     this->PML4 = PML4Address;
 }

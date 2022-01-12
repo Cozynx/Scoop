@@ -1,7 +1,8 @@
 #include <efi.h>
 #include <efilib.h>
 #include <elf.h>
-#include <stddef.h>
+
+typedef unsigned long long size_t;
 
 typedef struct {
 	void* BaseAddress;
@@ -26,7 +27,6 @@ typedef struct {
 } PSF1_FONT;
 
 Framebuffer framebuffer;
-
 Framebuffer* InitializeGOP() {
 	EFI_GUID gopGuid = EFI_GRAPHICS_OUTPUT_PROTOCOL_GUID;
 	EFI_GRAPHICS_OUTPUT_PROTOCOL* gop;
@@ -70,11 +70,10 @@ EFI_FILE* LoadFile(EFI_FILE* Directory, CHAR16* Path, EFI_HANDLE ImageHandle, EF
 }
 
 int memcmp(const void* aptr, const void* bptr, size_t n) {
-	const unsigned char* a = aptr;
-	const unsigned char* b = bptr;
+	const unsigned char* a = aptr, *b = bptr;
 	for(size_t i = 0; i < n; i++) {
 		if(a[i] < b[i]) return -1;
-		if(a[i] > b[i]) return 1;
+		else if(a[i] > b[i]) return 1;
 	}
 	return 0;
 }
@@ -112,12 +111,20 @@ PSF1_FONT* LoadPSF1Font(EFI_FILE* Directory, CHAR16* Path, EFI_HANDLE ImageHandl
 	return finishedFont;
 }
 
+UINTN strcmp(CHAR8* a, CHAR8* b, UINTN length) {
+	for(UINTN i = 0; i < length; i++) {
+		if(*a != *b) return 0;
+	}
+	return 1;
+}
+
 typedef struct {
 	Framebuffer* framebuffer;
 	PSF1_FONT* psf1_Font;
 	EFI_MEMORY_DESCRIPTOR* mMap;
 	UINTN mMapSize;
 	UINTN mMapDescSize;
+	void* rsdp;
 } BootInfo;
 
 EFI_STATUS efi_main (EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable) {
@@ -210,6 +217,20 @@ EFI_STATUS efi_main (EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable) {
 		SystemTable->BootServices->GetMemoryMap(&MapSize, Map, &MapKey, &DescriptorSize, &DescriptorVersion);
 	}
 
+	EFI_CONFIGURATION_TABLE* configTable = SystemTable->ConfigurationTable;
+	void* rsdp = NULL;
+	EFI_GUID Acpi2TableGuid = ACPI_20_TABLE_GUID;
+
+	for(UINTN i = 0; i < SystemTable->NumberOfTableEntries; i++) {
+		if(CompareGuid(&configTable[i].VendorGuid, &Acpi2TableGuid)) {
+			if(strcmp((CHAR8*)"RSD PTR ", (CHAR8*)configTable->VendorTable, 8)) {
+				rsdp = (void*)configTable->VendorTable;
+				// break;
+			}
+		}
+		configTable++;
+	}
+
 	void (*KernelStart)(BootInfo*) = ((__attribute__((sysv_abi)) void(*)(BootInfo*)) header.e_entry);
 
 	BootInfo bootInfo;
@@ -218,6 +239,7 @@ EFI_STATUS efi_main (EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable) {
 	bootInfo.mMap = Map;
 	bootInfo.mMapSize = MapSize;
 	bootInfo.mMapDescSize = DescriptorSize;
+	bootInfo.rsdp = rsdp;
 
 	SystemTable->BootServices->ExitBootServices(ImageHandle, MapKey);
 

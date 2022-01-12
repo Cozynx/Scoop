@@ -1,29 +1,36 @@
 #include "Interrupts.h"
-#include "../Panic/Panic.h"
 
-__attribute__((interrupt)) void PageFault_Handler(struct Interrupt_frame* frame) {
+__attribute__((interrupt)) void PageFault_Handler(interrupt_Frame* frame) {
     Panic("Page Fault Detected");
     int* test = (int*)0x80000000000;
     *test = 2;
     while(true);
 }
 
-__attribute__((interrupt)) void DoubleFault_Handler(struct Interrupt_frame* frame) {
+__attribute__((interrupt)) void DoubleFault_Handler(interrupt_Frame* frame) {
     Panic("Double Fault Detected");
     while(true);
 }
 
-__attribute__((interrupt)) void GPFault_Handler(struct Interrupt_frame* frame) {
+__attribute__((interrupt)) void GPFault_Handler(interrupt_Frame* frame) {
     Panic("General Protection Fault Detected");
     while(true);
 }
 
-__attribute__((interrupt)) void KeyboardInt_Handler(struct Interrupt_frame* frame) {
+__attribute__((interrupt)) void KeyboardInt_Handler(interrupt_Frame* frame) {
     uint8_t scancode = inb(0x60);
 
     HandleKeyboard(scancode);
 
     PIC_EndMaster();
+}
+
+__attribute__((interrupt)) void MouseInt_Handler(interrupt_Frame* frame) {
+    uint8_t mouseData = inb(0x60);
+
+    HandlePS2Mouse(mouseData);
+
+    PIC_EndSlave();
 }
 
 void PIC_EndMaster() {
