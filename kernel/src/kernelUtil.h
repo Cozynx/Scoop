@@ -17,6 +17,7 @@
 #include "ACPI/ACPI.h"
 #include "PCI/PCI.h"
 #include "include/mouse.h"
+#include "include/heap.h"
 
 struct BootInfo{
 	Framebuffer* framebuffer;
