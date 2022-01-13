@@ -221,8 +221,8 @@ EFI_STATUS efi_main (EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable) {
 	void* rsdp = NULL;
 	EFI_GUID Acpi2TableGuid = ACPI_20_TABLE_GUID;
 
-	for(UINTN i = 0; i < SystemTable->NumberOfTableEntries; i++) {
-		if(CompareGuid(&configTable[i].VendorGuid, &Acpi2TableGuid)) {
+	for(UINTN index = 0; index < SystemTable->NumberOfTableEntries; index++) {
+		if(CompareGuid(&configTable[index].VendorGuid, &Acpi2TableGuid)) {
 			if(strcmp((CHAR8*)"RSD PTR ", (CHAR8*)configTable->VendorTable, 8)) {
 				rsdp = (void*)configTable->VendorTable;
 				// break;

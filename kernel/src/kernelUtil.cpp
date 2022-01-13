@@ -82,7 +82,7 @@ KernelInfo InitializeKernel(BootInfo* bootInfo) {
     PrepareInterrupts();
 
     InitPS2Mouse();
-
+    
     PrepareACPI(bootInfo);
     
     outb(PIC1_DATA, 0b11111001);
