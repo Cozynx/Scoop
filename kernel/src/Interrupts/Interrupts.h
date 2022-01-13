@@ -4,6 +4,7 @@
 #include "../include/keyboard.h"
 #include "../Panic/Panic.h"
 #include "../include/mouse.h"
+#include "../Scheduling/PIT/pit.h"
 
 #define PIC1_COMMAND 0x20   // master PIC commandline
 #define PIC1_DATA 0x21      // Data Line for Master PIC
@@ -21,6 +22,7 @@ __attribute__((interrupt)) void DoubleFault_Handler(interrupt_Frame* frame);
 __attribute__((interrupt)) void GPFault_Handler(interrupt_Frame* frame);
 __attribute__((interrupt)) void KeyboardInt_Handler(interrupt_Frame* frame);
 __attribute__((interrupt)) void MouseInt_Handler(interrupt_Frame* frame);
+__attribute__((interrupt)) void PITInt_Handler(interrupt_Frame* frame);
 
 void RemapPIC();
 void PIC_EndMaster();

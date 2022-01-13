@@ -18,6 +18,7 @@
 #include "PCI/PCI.h"
 #include "include/mouse.h"
 #include "include/heap.h"
+#include "Scheduling/PIT/pit.h"
 
 struct BootInfo{
 	Framebuffer* framebuffer;

@@ -13,7 +13,7 @@ namespace PIT {
         }
     }
 
-    void Sleep(uint16_t milliseconds) {
+    void Sleep(uint64_t milliseconds) {
         Sleepd((double)milliseconds / 1000);
     }
 
